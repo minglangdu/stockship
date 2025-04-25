@@ -4,6 +4,18 @@
 #include <string>
 #include <vector>
 
+struct Ship {
+    std::pair<int, int> coord;
+    int size; 
+    bool dir; // true: horizontal; false: vertical
+
+    Ship(int x, int y, int size, bool dir);
+    Ship();
+    bool check(std::vector<std::vector<int>> prefmiss, std::vector<Ship> ships);
+    bool checkmiss(std::vector<std::vector<int>> prefmiss);
+    bool checkship(Ship ship);
+};
+
 namespace SDLH {
     extern bool DID_INIT;
     extern int WINDOWS;
@@ -31,6 +43,7 @@ namespace SDLH {
             std::vector<std::vector<double>> res;
             bool input; 
             bool signal; // if true, stockship will toggle between showing results and getting inputs 
+            std::vector<Ship> curcomb; // current combination of ships
 
             BInterface(int boardsize, bool input=true);
             ~BInterface();

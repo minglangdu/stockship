@@ -14,6 +14,57 @@ bool SDLH::DID_INIT = false;
 int SDLH::WINDOWS = 0;
 
 /*
+Ship
+*/
+
+Ship::Ship(int x, int y, int size, bool dir) {
+    coord = make_pair(x, y);
+    this->size = size;
+    this->dir = dir;
+}
+
+Ship::Ship() { // default constructor
+    coord = make_pair(-1, -1);
+    this->size = 0;
+    this->dir = 0;
+}
+
+bool Ship::check(vector<vector<int>> prefmiss, vector<Ship> ships) {
+    int x1 = coord.first, y1 = coord.second, x2 = x1 + ((dir) ? size : 1), y2 = y1 + ((!dir) ? size : 1);
+    if (x1 < 0 || y1 < 0 || x2 >= GRIDSIZE || y2 >= GRIDSIZE) return false;
+    if (!checkmiss(prefmiss)) return false;
+    for (Ship s : ships) {
+        if (!checkship(s)) {
+            return false;
+        }
+    }
+    return true; // valid
+}
+
+bool Ship::checkmiss(vector<vector<int>> prefmiss) { // true = valid; false = invalid
+    int x1 = coord.first, y1 = coord.second, x2 = x1 + ((dir) ? size : 1), y2 = y1 + ((!dir) ? size : 1);
+    if (prefmiss[y2][x2] - ((y1 > 0) ? prefmiss[y1 - 1][x2] : 0) - ((x1 > 0) ? prefmiss[y2][x1 - 1] : 0) + 
+    ((y1 > 0 && x1 > 0) ? prefmiss[y1 - 1][x1 - 1] : 0) > 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+bool Ship::checkship(Ship ship) {
+    int x1 = coord.first, y1 = coord.second, x2 = x1 + ((dir) ? size : 1), y2 = y1 + ((!dir) ? size : 1);
+    int ox1 = ship.coord.first, oy1 = ship.coord.second, ox2 = ox1 + ((ship.dir) ? ship.size : 1),
+    oy2 = oy1 + ((!ship.dir) ? ship.size : 1);
+    if (x1 > ox2 || x2 < ox1) {
+        return true;
+    } 
+    if (y1 > oy2 || y2 < oy1) {
+        return true;
+    }
+    return false;
+}
+
+/*
 Display
 */
 
@@ -148,6 +199,20 @@ void SDLH::BInterface::renderObjects() {
                 }
             }
             SDL_RenderFillRect(renderer, &rect);
+        }
+    }
+    SDL_SetRenderDrawColor(renderer, SHIP[0], SHIP[1], SHIP[2], 0xFF);
+    for (Ship s : curcomb) {
+        int x1 = x + TILESIZE * s.coord.first + 1;
+        int y1 = y + TILESIZE * s.coord.second + 1;
+        for (int i = 0; i < s.size; i ++) {
+            SDL_Rect rect = {x1, y1, TILESIZE - 1, TILESIZE - 1};
+            SDL_RenderFillRect(renderer, &rect);
+            if (s.dir) {
+                x1 += TILESIZE;
+            } else {
+                y1 += TILESIZE;
+            }
         }
     }
 }
