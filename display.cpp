@@ -73,7 +73,8 @@ SDLH::Display::Display(string title, int windowsize) {
         SDL_Init(SDL_INIT_EVERYTHING);
         SDLH::DID_INIT = true;
     }
-
+    
+    quit = false;
     window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         windowsize, windowsize, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -100,7 +101,7 @@ SDLH::Display::~Display() {
 
 bool SDLH::Display::update() {
     // returns whether quit is true;
-    SDL_Event e; bool quit = false;
+    SDL_Event e; 
     while (SDL_PollEvent(&e)) { // seems to be causing the error
         if (e.type == SDL_QUIT) quit = true;
         if (e.window.event == SDL_WINDOWEVENT_CLOSE) quit = true;
@@ -202,16 +203,18 @@ void SDLH::BInterface::renderObjects() {
         }
     }
     SDL_SetRenderDrawColor(renderer, SHIP[0], SHIP[1], SHIP[2], 0xFF);
-    for (Ship s : curcomb) {
-        int x1 = x + TILESIZE * s.coord.first + 1;
-        int y1 = y + TILESIZE * s.coord.second + 1;
-        for (int i = 0; i < s.size; i ++) {
-            SDL_Rect rect = {x1, y1, TILESIZE - 1, TILESIZE - 1};
-            SDL_RenderFillRect(renderer, &rect);
-            if (s.dir) {
-                x1 += TILESIZE;
-            } else {
-                y1 += TILESIZE;
+    if (!input) {
+        for (Ship s : curcomb) {
+            int x1 = x + TILESIZE * s.coord.first + 1;
+            int y1 = y + TILESIZE * s.coord.second + 1;
+            for (int i = 0; i < s.size; i ++) {
+                SDL_Rect rect = {x1, y1, TILESIZE - 1, TILESIZE - 1};
+                SDL_RenderFillRect(renderer, &rect);
+                if (s.dir) {
+                    x1 += TILESIZE;
+                } else {
+                    y1 += TILESIZE;
+                }
             }
         }
     }
@@ -225,3 +228,5 @@ pair<int, int> SDLH::BInterface::getTile(int mx, int my) {
     }
     return make_pair(floor(mx / TILESIZE), floor(my / TILESIZE));
 }
+
+// i love gd cologne

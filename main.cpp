@@ -49,6 +49,7 @@ pair<vector<vector<double>>, double> simall(vector<vector<int>> inp) {
         cout << "adding ship #" << ship << ", ship size " << ssize << "\n";
         for (int i = q.size(); i > 0; i --) {
             vector<Ship> cur = q.front(); q.pop();
+            if (d->quit) return {{}, 0};
             d->curcomb = cur;
             d->update();
             // cout << "comb " << i << " " << cur.size() << "\n";
@@ -89,6 +90,8 @@ pair<vector<vector<double>>, double> simlite(vector<vector<int>> inp) {
     int simsleft = SIMS;
     while (simsleft --) {
         //
+        if (d->quit) return {{}, 0};
+
         d->update();
     }
     return make_pair(ans, most);

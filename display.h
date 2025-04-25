@@ -26,6 +26,7 @@ namespace SDLH {
         public:
             SDL_Window* window;
             SDL_Renderer* renderer;
+            bool quit;
 
             Display(std::string title, int windowsize);
             ~Display();
