@@ -19,9 +19,6 @@ pair<vector<vector<int>>, vector<pair<int, int>>> preprocess(vector<vector<int>>
             if (inp[i][j] == 0) continue;
             else if (inp[i][j] == 1) {
                 prefmiss[i][j] ++;
-                prefmiss[i][j + 1] --;
-                prefmiss[i + 1][j] --;
-                prefmiss[i + 1][j + 1] ++;
             } else if (inp[i][j] == 2) {
                 hits.push_back(make_pair(j, i));
             }
@@ -31,7 +28,9 @@ pair<vector<vector<int>>, vector<pair<int, int>>> preprocess(vector<vector<int>>
         for (int j = 0; j <= m; j ++) {
             prefmiss[i][j] += ((i > 0) ? prefmiss[i - 1][j] : 0) + ((j > 0) ? prefmiss[i][j - 1] : 0)
             - ((i > 0 && j > 0) ? prefmiss[i - 1][j - 1] : 0);
+            cout << prefmiss[i][j] << " ";
         }
+        cout << "\n";
     }
     return make_pair(prefmiss, hits);
 }
@@ -53,22 +52,22 @@ pair<vector<vector<double>>, double> simall(vector<vector<int>> inp) {
     q.push(vector<Ship> (0));
     int ship = 1;
     for (int ssize : ships) {
-        cout << "adding ship #" << ship << ", ship size " << ssize << "\n";
+        // cout << "adding ship #" << ship << ", ship size " << ssize << "\n";
         for (int i = q.size(); i > 0; i --) {
             vector<Ship> cur = q.front(); q.pop();
             if (d->quit) return {{}, 0};
-            d->curcomb = cur;
-            d->update();
-            cout << "comb " << i << " " << cur.size() << "\n";
+            // cout << "comb " << i << " " << cur.size() << "\n";
             for (int dir = 0; dir < 2; dir ++) { // direction
-                cout << "dir " << dir << "\n";
+                // cout << "dir " << dir << "\n";
                 for (int y = 0; y < GRIDSIZE; y ++) {
                     for (int x = 0; x < GRIDSIZE; x ++) {
                         Ship curs (x, y, ssize, (bool)dir);
                         if (curs.check(prefmiss, cur)) {
-                            cout << "coord " << x << " " << y << "\n";
+                            // cout << "coord " << x << " " << y << "\n";
                             cur.push_back(curs);
                             q.push(cur);
+                            d->curcomb = cur;
+                            d->update();
                             cur.pop_back();
                         }
                     }

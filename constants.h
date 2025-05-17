@@ -15,7 +15,7 @@ const int TILESIZE = 35;
 
 // stockship
 
-const int ships[] = {2};
+const int ships[] = {5, 4, 3, 3, 2};
 
 // stockship lite
 
