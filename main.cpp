@@ -29,7 +29,8 @@ pair<vector<vector<int>>, vector<pair<int, int>>> preprocess(vector<vector<int>>
     }
     for (int i = 0; i <= n; i ++) {
         for (int j = 0; j <= m; j ++) {
-            prefmiss[i][j] += ((i > 0) ? prefmiss[i - 1][j] : 0) + ((j > 0) ? prefmiss[i][j - 1] : 0);
+            prefmiss[i][j] += ((i > 0) ? prefmiss[i - 1][j] : 0) + ((j > 0) ? prefmiss[i][j - 1] : 0)
+            - ((i > 0 && j > 0) ? prefmiss[i - 1][j - 1] : 0);
         }
     }
     return make_pair(prefmiss, hits);
@@ -42,6 +43,12 @@ pair<vector<vector<double>>, double> simall(vector<vector<int>> inp) {
     auto prep = preprocess(inp);
     vector<vector<int>> prefmiss = prep.first;
     vector<pair<int, int>> hits = prep.second;
+    for (vector<int> col : prefmiss) {
+        for (int r : col) {
+            cout << r << " ";
+        }
+        cout << "\n";
+    }
     queue<vector<Ship>> q;
     q.push(vector<Ship> (0));
     int ship = 1;
@@ -52,14 +59,14 @@ pair<vector<vector<double>>, double> simall(vector<vector<int>> inp) {
             if (d->quit) return {{}, 0};
             d->curcomb = cur;
             d->update();
-            // cout << "comb " << i << " " << cur.size() << "\n";
+            cout << "comb " << i << " " << cur.size() << "\n";
             for (int dir = 0; dir < 2; dir ++) { // direction
-                // cout << "dir " << dir << "\n";
+                cout << "dir " << dir << "\n";
                 for (int y = 0; y < GRIDSIZE; y ++) {
                     for (int x = 0; x < GRIDSIZE; x ++) {
-                        // cout << "coord " << x << " " << y << "\n";
                         Ship curs (x, y, ssize, (bool)dir);
                         if (curs.check(prefmiss, cur)) {
+                            cout << "coord " << x << " " << y << "\n";
                             cur.push_back(curs);
                             q.push(cur);
                             cur.pop_back();
@@ -70,6 +77,8 @@ pair<vector<vector<double>>, double> simall(vector<vector<int>> inp) {
         }
         cout << q.size() << " combinations" << "\n";
     }
+    d->curcomb = {};
+    d->update();
     // continue working here
 
     for (int i = 0; i < n; i ++) {

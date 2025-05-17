@@ -30,8 +30,8 @@ Ship::Ship() { // default constructor
 }
 
 bool Ship::check(vector<vector<int>> prefmiss, vector<Ship> ships) {
-    int x1 = coord.first, y1 = coord.second, x2 = x1 + ((dir) ? size : 1), y2 = y1 + ((!dir) ? size : 1);
-    if (x1 < 0 || y1 < 0 || x2 >= GRIDSIZE || y2 >= GRIDSIZE) return false;
+    int x1 = coord.first, y1 = coord.second, x2 = x1 + ((dir) ? size : 0), y2 = y1 + ((!dir) ? size : 0);
+    if (x1 < 0 || y1 < 0 || x2 > GRIDSIZE || y2 > GRIDSIZE) return false;
     if (!checkmiss(prefmiss)) return false;
     for (Ship s : ships) {
         if (!checkship(s)) {
@@ -42,7 +42,7 @@ bool Ship::check(vector<vector<int>> prefmiss, vector<Ship> ships) {
 }
 
 bool Ship::checkmiss(vector<vector<int>> prefmiss) { // true = valid; false = invalid
-    int x1 = coord.first, y1 = coord.second, x2 = x1 + ((dir) ? size : 1), y2 = y1 + ((!dir) ? size : 1);
+    int x1 = coord.first, y1 = coord.second, x2 = x1 + ((dir) ? size : 0), y2 = y1 + ((!dir) ? size : 0);
     if (prefmiss[y2][x2] - ((y1 > 0) ? prefmiss[y1 - 1][x2] : 0) - ((x1 > 0) ? prefmiss[y2][x1 - 1] : 0) + 
     ((y1 > 0 && x1 > 0) ? prefmiss[y1 - 1][x1 - 1] : 0) > 0) {
         return false;
@@ -52,9 +52,9 @@ bool Ship::checkmiss(vector<vector<int>> prefmiss) { // true = valid; false = in
 }
 
 bool Ship::checkship(Ship ship) {
-    int x1 = coord.first, y1 = coord.second, x2 = x1 + ((dir) ? size : 1), y2 = y1 + ((!dir) ? size : 1);
-    int ox1 = ship.coord.first, oy1 = ship.coord.second, ox2 = ox1 + ((ship.dir) ? ship.size : 1),
-    oy2 = oy1 + ((!ship.dir) ? ship.size : 1);
+    int x1 = coord.first, y1 = coord.second, x2 = x1 + ((dir) ? size : 0), y2 = y1 + ((!dir) ? size : 0);
+    int ox1 = ship.coord.first, oy1 = ship.coord.second, ox2 = ox1 + ((ship.dir) ? ship.size : 0),
+    oy2 = oy1 + ((!ship.dir) ? ship.size : 0);
     if (x1 > ox2 || x2 < ox1) {
         return true;
     } 
