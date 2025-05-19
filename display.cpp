@@ -64,6 +64,20 @@ bool Ship::checkship(Ship ship) {
     return false;
 }
 
+vector<pair<int, int>> Ship::getremhits(vector<pair<int, int>> hits) {
+    int x1 = coord.first, y1 = coord.second, x2 = x1 + ((dir) ? size : 0), y2 = y1 + ((!dir) ? size : 0);
+    vector<pair<int, int>> res;
+    for (pair<int, int> cur : hits) {
+        if (dir && x1 == cur.first && !(cur.second < y1 || cur.second > y2)) {
+            res.push_back(cur);
+        }
+        if (!dir && y1 == cur.second && !(cur.second < y1)) {
+            res.push_back(cur);
+        }
+    }
+    return res;
+}
+
 /*
 Display
 */

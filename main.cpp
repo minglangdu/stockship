@@ -78,8 +78,17 @@ pair<vector<vector<double>>, double> simall(vector<vector<int>> inp) {
     }
     d->curcomb = {};
     d->update();
-    // continue working here
+    while (!q.empty()) {
+        vector<Ship> cur = q.front(); q.pop();
+        bool hits = false;
+        for ()
+        // check for hits - placeholder
+        if (hits) { // if all hits have ships
+            d->curcomb = cur;
 
+        }
+        d->update();
+    }
     for (int i = 0; i < n; i ++) {
         for (int j = 0; j < m; j ++) {
             if (inp[i][j] != 0) ans[i][j] = 0;

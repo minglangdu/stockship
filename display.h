@@ -14,6 +14,8 @@ struct Ship {
     bool check(std::vector<std::vector<int>> prefmiss, std::vector<Ship> ships);
     bool checkmiss(std::vector<std::vector<int>> prefmiss);
     bool checkship(Ship ship);
+    // get hits in hit list that haven't hit this ship
+    std::vector<std::pair<int, int>> getremhits(std::vector<std::pair<int, int>> hits); 
 };
 
 namespace SDLH {
