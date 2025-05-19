@@ -28,9 +28,7 @@ pair<vector<vector<int>>, vector<pair<int, int>>> preprocess(vector<vector<int>>
         for (int j = 0; j <= m; j ++) {
             prefmiss[i][j] += ((i > 0) ? prefmiss[i - 1][j] : 0) + ((j > 0) ? prefmiss[i][j - 1] : 0)
             - ((i > 0 && j > 0) ? prefmiss[i - 1][j - 1] : 0);
-            cout << prefmiss[i][j] << " ";
         }
-        cout << "\n";
     }
     return make_pair(prefmiss, hits);
 }
@@ -80,22 +78,46 @@ pair<vector<vector<double>>, double> simall(vector<vector<int>> inp) {
     d->update();
     while (!q.empty()) {
         vector<Ship> cur = q.front(); q.pop();
-        bool hits = false;
-        for ()
+        for (Ship s : cur) {
+            hits = s.getremhits(hits);
+        }
         // check for hits - placeholder
-        if (hits) { // if all hits have ships
+        if (hits.size() == 0) { // if all hits have ships
             d->curcomb = cur;
-
+            for (Ship s : cur) {
+                // difference array
+                int y = s.coord.second, x = s.coord.first;
+                ans[y][x] ++;
+                if (s.dir) { // horizontal
+                    if (y < n - 1) ans[y + 1][x] --;
+                    if (x + s.size - 1 < m - 1) ans[y][x + s.size - 1] --;
+                    if ((y < n - 1) && (x + s.size - 1 < m - 1))
+                    ans[y + 1][x + s.size - 1] ++;
+                } else { // vertical
+                    if (x < m - 1) ans[y][x + 1] --;
+                    if (y + s.size - 1 < n - 1) ans[y + s.size - 1][x] --;
+                    if ((x < m - 1) && (y + s.size - 1 < n - 1))
+                    ans[y + s.size - 1][x + 1] ++;
+                }
+            }
         }
         d->update();
     }
+    // turn ans into diff array
+    for (int i = 0; i < n; i ++) {
+        for (int j = 0; j < m; j ++) {
+            ans[i][j] += ((i > 0) ? ans[i - 1][j] : 0) + ((j > 0) ? ans[i][j - 1] : 0)
+            - ((i > 0 && j > 0) ? ans[i - 1][j - 1] : 0);
+        }
+    }
+
     for (int i = 0; i < n; i ++) {
         for (int j = 0; j < m; j ++) {
             if (inp[i][j] != 0) ans[i][j] = 0;
             most = max(most, ans[i][j]);
         }
     }
-
+    d->curcomb = {};
     return make_pair(ans, most);
 }
 
