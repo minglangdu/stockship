@@ -123,16 +123,51 @@ pair<vector<vector<double>>, double> simall(vector<vector<int>> inp) {
 
 pair<vector<vector<double>>, double> simlite(vector<vector<int>> inp) {
     int n = inp.size(); int m = inp[0].size();
-    vector<vector<double>> ans (inp.size(), vector<double> (inp[0].size(), 0));
+    vector<vector<double>> ans (n, vector<double> (m, 0));
     double most = 0.1;
+    random_device rd;
+    mt19937 mt (rd());
+    uniform_int_distribution<int> distn (0, n);
+    uniform_int_distribution<int> distm (0, m);
+    uniform_int_distribution<int> dir (0, 1);
+    auto prep = preprocess(inp);
 
     int simsleft = SIMS;
     while (simsleft --) {
-        //
+        cout << "simulation " << SIMS - simsleft << "\n";
+        vector<Ship> cur = {};
+        // placeholder - no hit or miss detection
+        for (int ssize : ships) {
+            Ship s;
+            while (!s.check(prep.first, cur)) {
+                s = Ship(distm(mt), distn(mt), ssize, (dir(mt) == 1));
+            }
+            int x = s.coord.first; int y = s.coord.second;
+            if (s.dir) { // horizontal
+                for (int i = 0; i < ssize; i ++) {
+                    ans[y][x + i] ++;
+                }
+            } else { // vertical
+                for (int i = 0; i < ssize; i ++) {
+                    ans[y + i][x] ++;
+                }
+            }
+            cur.push_back(s);
+        }
         if (d->quit) return {{}, 0};
-
+        d->curcomb = cur;
         d->update();
     }
+
+    for (int i = 0; i < n; i ++) {
+        for (int j = 0; j < m; j ++) {
+            if (inp[i][j] != 0) ans[i][j] = 0;
+            most = max(most, ans[i][j]);
+            cout << ans[i][j] << " ";
+        }
+        cout << "\n";
+    }
+    d->curcomb = {};
     return make_pair(ans, most);
 }
 

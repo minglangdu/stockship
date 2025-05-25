@@ -31,7 +31,7 @@ Ship::Ship() { // default constructor
 
 bool Ship::check(vector<vector<int>> prefmiss, vector<Ship> ships) {
     int x1 = coord.first, y1 = coord.second, x2 = x1 + ((dir) ? size : 0), y2 = y1 + ((!dir) ? size : 0);
-    if (x1 < 0 || y1 < 0 || x2 > GRIDSIZE || y2 > GRIDSIZE) return false;
+    if (x1 < 0 || y1 < 0 || x2 >= GRIDSIZE || y2 >= GRIDSIZE) return false;
     if (!checkmiss(prefmiss)) return false;
     for (Ship s : ships) {
         if (!checkship(s)) {
