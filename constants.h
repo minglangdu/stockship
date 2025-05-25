@@ -15,10 +15,10 @@ const int TILESIZE = 35;
 
 // stockship
 
-// const int ships[] = {5, 4, 3, 3, 2};
-const int ships[] = {3, 2};
+const int ships[] = {5, 4, 3, 3, 2};
+// const int ships[] = {3, 2};
 
 // stockship lite
 
-const bool LITE = false;
-const int SIMS = 400;
+const bool LITE = true;
+const int SIMS = 1000;
